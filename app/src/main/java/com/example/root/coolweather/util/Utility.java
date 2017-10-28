@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.example.root.coolweather.db.City;
 import com.example.root.coolweather.db.Province;
+import com.example.root.coolweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,5 +84,19 @@ public class Utility
             }
         }
         return false;
+    }
+
+    //将返回的JSON数据解析成Weather实体类
+    public static Weather handleWeatherResponse(String response)
+    {
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
