@@ -33,6 +33,9 @@ public class WeatherActivity extends AppCompatActivity
 
     private LinearLayout forecastLayout;
 
+    private TextView aqiText;
+    private TextView pm25Text;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -48,6 +51,9 @@ public class WeatherActivity extends AppCompatActivity
         weatherInfoText = (TextView) findViewById(R.id.weather_info_text);
 
         forecastLayout = (LinearLayout) findViewById(R.id.forecast_layout);
+
+        aqiText =(TextView) findViewById(R.id.aqi_text);
+        pm25Text = (TextView) findViewById(R.id.pm25_text);
 
         SharedPreferences sharedPreferences
                 =PreferenceManager.getDefaultSharedPreferences(this);
@@ -152,7 +158,25 @@ public class WeatherActivity extends AppCompatActivity
                     forecastLayout,
                     false
             );
+            TextView dateText = view.findViewById(R.id.date_text);
+            dateText.setText(forecast.date);
+
+            TextView infoText = view.findViewById(R.id.info_text);
+            infoText.setText(forecast.more.info);
+
+            TextView maxText = view.findViewById(R.id.max_text);
+            maxText.setText(forecast.temperature.max);
+
+            TextView minText = view.findViewById(R.id.min_text);
+            minText.setText(forecast.temperature.min);
+
             forecastLayout.addView(view);
+
+            if (weather.aqi != null)
+            {
+                aqiText.setText(weather.aqi.city.aqi);
+                pm25Text.setText(weather.aqi.city.pm25);
+            }
         }
 
         weatherLayout.setVisibility(View.VISIBLE);
