@@ -8,7 +8,15 @@ import org.litepal.crud.DataSupport;
 
 public class City extends DataSupport
 {
+    //在数据库里的变量名都是小写的!
+    //CREATE TABLE city (id integer primary key autoincrement,
+    // citycode integer, cityname text, provinceid integer);
+
     private int id;
+    private String cityName;
+    private int cityCode;
+    private int provinceId;
+
     public void setId(int id)
     {
         this.id = id;
@@ -18,7 +26,7 @@ public class City extends DataSupport
         return id;
     }
 
-    private String cityName;
+
     public void setCityName(String cityName)
     {
         this.cityName = cityName;
@@ -28,7 +36,7 @@ public class City extends DataSupport
         return cityName;
     }
 
-    private int cityCode;
+
     public void setCityCode(int cityCode)
     {
         this.cityCode = cityCode;
@@ -38,7 +46,7 @@ public class City extends DataSupport
         return cityCode;
     }
 
-    private int provinceId;
+
     public void setProvinceId(int provinceId)
     {
         this.provinceId = provinceId;

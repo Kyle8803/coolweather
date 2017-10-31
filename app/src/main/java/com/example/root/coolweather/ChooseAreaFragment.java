@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.root.coolweather.db.City;
+import com.example.root.coolweather.db.County;
 import com.example.root.coolweather.db.Province;
 import com.example.root.coolweather.util.HttpUtil;
 import com.example.root.coolweather.util.Utility;
@@ -48,12 +49,15 @@ public class ChooseAreaFragment extends Fragment
     List<Province> provinceList;
     //市列表
     List<City> cityList;
-
+    //县列表
+    List<County> countyList;
     //当前选中的级别
     int currentLevel;
 
     //选中的省份
     private Province selectedProvince;
+    //选中的城市
+    private City selectedCity;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -87,15 +91,16 @@ public class ChooseAreaFragment extends Fragment
                 }
                 else if (currentLevel == LEVEL_CITY)
                 {
-
+                    selectedCity = cityList.get(position);
+                    queryCounties();
                 }
                 else if (currentLevel == LEVEL_COUNTY)
                 {
-                    String weatherId="";
+                    String weatherId = countyList.get(position).getWeatherId();
                     Intent intent = new Intent(getActivity(),WeatherActivity.class);
                     intent.putExtra("weather_id",weatherId);
                     startActivity(intent);
-                    getActivity();
+                    getActivity().finish();
                 }
             }
         });
@@ -117,7 +122,7 @@ public class ChooseAreaFragment extends Fragment
             adapter.notifyDataSetChanged();
 
             listView.setSelection(0);
-            //currentLevel = LEVEL_PROVINCE;
+            currentLevel = LEVEL_PROVINCE;
         }
         else
         {
@@ -151,6 +156,30 @@ public class ChooseAreaFragment extends Fragment
         }
     }
 
+    //查询选中市内所有的县，优先从数据库查询
+    private  void queryCounties()
+    {
+        countyList = DataSupport.where("cityid = ?",
+                String.valueOf(selectedCity.getId())).find(County.class);
+        if (countyList.size()>0)
+        {
+            dataList.clear();
+            for (County county : countyList)
+            {
+                dataList.add(county.getCountyName());
+            }
+            adapter.notifyDataSetChanged();
+            listView.setSelection(0);
+            currentLevel = LEVEL_COUNTY;
+        }
+        else
+        {
+            int provinceCode = selectedProvince.getProvinceCode();
+            int cityCode = selectedCity.getCityCode();
+            String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
+            queryFromServer(address, "county");
+        }
+    }
     //根据传入的地址和类型从服务器上查询省市县数据
     private void queryFromServer(String address,final String type)
     {
@@ -189,6 +218,10 @@ public class ChooseAreaFragment extends Fragment
                 {
                     result = Utility.handleCityResponse(responseText,selectedProvince.getId());
                 }
+                else if ("county".equals(type))
+                {
+                    result = Utility.handleCountyResponse(responseText,selectedCity.getId());
+                }
 
                 if (result)
                 {
@@ -205,6 +238,10 @@ public class ChooseAreaFragment extends Fragment
                             else if ("city".equals(type))
                             {
                                 queryCities();
+                            }
+                            else if ("county".equals(type))
+                            {
+                                queryCounties();
                             }
                         }
                     };

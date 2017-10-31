@@ -8,6 +8,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class Basic
 {
+    /*
+    * "basic"
+    * {
+    *   "city":"苏州",
+    *   "id":"CN101190401",
+    *   "update":
+    *   {
+    *       "loc":"2016-08-08 21:58"
+    *   }
+    * }
+    * */
     @SerializedName("city")
     public String cityName;
 
@@ -16,6 +27,7 @@ public class Basic
 
     public class Update
     {
+        //loc表示天气的更新时间
         @SerializedName("loc")
         public String updateTime;
     }

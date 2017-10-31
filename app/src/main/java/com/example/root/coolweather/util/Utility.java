@@ -3,8 +3,10 @@ package com.example.root.coolweather.util;
 import android.text.TextUtils;
 
 import com.example.root.coolweather.db.City;
+import com.example.root.coolweather.db.County;
 import com.example.root.coolweather.db.Province;
 import com.example.root.coolweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,13 +67,14 @@ public class Utility
                 JSONArray allCities = new JSONArray(response);
 
                 for (int i=0; i<allCities.length();i++)
-                {
+                {   /*
+                     id	113
+                     name	"南京"
+                     */
                     JSONObject cityObject = allCities.getJSONObject(i);
-
                     City city = new City();
-
-                    city.setCityName(cityObject.getString("name"));
                     city.setCityCode(cityObject.getInt("id"));
+                    city.setCityName(cityObject.getString("name"));
 
                     city.setProvinceId(provinceId);
                     city.save();
@@ -86,12 +89,73 @@ public class Utility
         return false;
     }
 
+    public static boolean handleCountyResponse(String response,int cityId)
+    {
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONArray allCounties = new JSONArray(response);
+                for (int i=0; i<allCounties.length(); i++)
+                {
+                    /*JSON data
+                    * id	921
+                    name	"南京"
+                    weather_id	"CN101190101"
+                    */
+                    /*
+                    * private int id;
+                      private String countyName;
+                      private String weatherId;
+                      private int cityId;
+                    * */
+                    JSONObject countyObject = allCounties.getJSONObject(i);
+                    County county = new County();
+
+                    county.setCountyName(countyObject.getString("name"));
+                    county.setWeatherId(countyObject.getString("weather_id"));
+                    county.setCityId(cityId);
+                    county.save();
+                }
+                return true;
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     //将返回的JSON数据解析成Weather实体类
     public static Weather handleWeatherResponse(String response)
     {
+        /*public class Weather
+        {
+    *   {
+    *   "HeWeather":
+    *   [
+    *       {
+    *           "status":"ok",
+    *           "basic",{},
+    *       }
+    *   ]
+    * }
+    * */
+
         try
         {
-
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            /*
+            * {"name":"Tom","age":20}
+              可以定一个一个类，并加入name 和age这两个字段，然后调用以下代码
+               Gson gson = new Gson();
+               Person person = gson.fromJson(jsonData,Person.class);
+            */
+            Gson gson = new Gson();
+            return gson.fromJson(weatherContent,Weather.class);
         }
         catch (Exception e)
         {

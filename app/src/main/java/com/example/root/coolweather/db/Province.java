@@ -8,6 +8,9 @@ import org.litepal.crud.DataSupport;
 
 public class Province extends DataSupport
 {
+    //CREATE TABLE province (id integer primary key autoincrement,
+    // provincecode integer, provincename text);
+
     private int    id;
     private String provinceName;
     private int    provinceCode;

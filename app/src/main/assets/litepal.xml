@@ -4,5 +4,7 @@
     <version value="1"></version>
     <list>
         <mapping class="com.example.root.coolweather.db.Province"></mapping>
+        <mapping class="com.example.root.coolweather.db.City"></mapping>
+        <mapping class="com.example.root.coolweather.db.County"></mapping>
     </list>
 </litepal>
