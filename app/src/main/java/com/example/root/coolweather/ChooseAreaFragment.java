@@ -41,6 +41,9 @@ public class ChooseAreaFragment extends Fragment
     public static final int LEVEL_CITY = 1;
     public static final int LEVEL_COUNTY = 2;
 
+    private TextView titleText;
+    private Button   backButton;
+
     ListView listView;
     ArrayAdapter<String> adapter;
     List<String> dataList = new ArrayList<>();
@@ -65,6 +68,8 @@ public class ChooseAreaFragment extends Fragment
 
         View view = inflater.inflate(R.layout.choose_area,container,false);
 
+        titleText = view.findViewById(R.id.title_text);
+        backButton = view.findViewById(R.id.back_button);
         listView   = view.findViewById(R.id.list_view);
 
         adapter = new ArrayAdapter<>
@@ -78,6 +83,22 @@ public class ChooseAreaFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         //第一步
         queryProvinces();
+
+        backButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                    if (currentLevel == LEVEL_COUNTY)
+                    {
+                        queryCities();
+                    }
+                    else if (currentLevel == LEVEL_CITY)
+                    {
+                        queryProvinces();
+                    }
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -97,10 +118,22 @@ public class ChooseAreaFragment extends Fragment
                 else if (currentLevel == LEVEL_COUNTY)
                 {
                     String weatherId = countyList.get(position).getWeatherId();
-                    Intent intent = new Intent(getActivity(),WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);
-                    startActivity(intent);
-                    getActivity().finish();
+
+                    if (getActivity() instanceof MainActivity)
+                    {
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                    else if (getActivity() instanceof WeatherActivity)
+                    {
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefreshLayout.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+
+                    }
                 }
             }
         });
@@ -109,6 +142,7 @@ public class ChooseAreaFragment extends Fragment
     //查询全国所有省份，优先从数据库查询，如果没有查询到再去服务器上查询
     private void queryProvinces()
     {
+        titleText.setText("中国");
         provinceList = DataSupport.findAll(Province.class);
         //一开始没有数据，所以provinceList.size=0
         if (provinceList.size() > 0)
@@ -134,6 +168,7 @@ public class ChooseAreaFragment extends Fragment
     //查询选中省内所有市，优先从数据库查询，如果没有，再到服务器查询
     private void queryCities()
     {
+        titleText.setText(selectedProvince.getProvinceName());
         //where()方法用于指定查询的约束条件，对应了SQL当中的where关键字
         cityList = DataSupport.where("provinceId = ?",
                 String.valueOf(selectedProvince.getId())).find(City.class);
@@ -159,6 +194,7 @@ public class ChooseAreaFragment extends Fragment
     //查询选中市内所有的县，优先从数据库查询
     private  void queryCounties()
     {
+        titleText.setText(selectedCity.getCityName());
         countyList = DataSupport.where("cityid = ?",
                 String.valueOf(selectedCity.getId())).find(County.class);
         if (countyList.size()>0)
