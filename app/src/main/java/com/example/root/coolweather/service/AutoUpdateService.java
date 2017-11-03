@@ -28,8 +28,8 @@ public class AutoUpdateService extends Service
 
     public int onStartCommand(Intent intent,int flags,int startId)
     {
-        updateWeather();
         updateBingPic();
+        updateWeather();
 
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         //这是8小时的毫秒数
@@ -63,6 +63,32 @@ public class AutoUpdateService extends Service
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pendingIntent);
 
         return super.onStartCommand(intent,flags, startId);
+    }
+
+    //更新必应每日一图
+    private void updateBingPic()
+    {
+        String requestBingPicture_address = "http://guolin.tech/api/bing_pic";
+        Callback callback = new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                String bingPicture = response.body().string();
+                SharedPreferences.Editor editor =
+                        PreferenceManager.getDefaultSharedPreferences(
+                                AutoUpdateService.this).edit();
+                editor.putString("bing_picture",bingPicture);
+                editor.apply();
+            }
+        };
+        HttpUtil.sendOkHttpRequest(requestBingPicture_address,callback);
     }
 
     //更新天气信息
@@ -103,36 +129,8 @@ public class AutoUpdateService extends Service
                     }
                 }
             };
-
             HttpUtil.sendOkHttpRequest(weatherUrl,callback);
         }
-    }
-
-    //更新必应每日一图
-    private void updateBingPic()
-    {
-        String requestBingPic = "http://guolin.tech/api/bing_pic";
-        Callback callback = new Callback()
-        {
-            @Override
-            public void onFailure(Call call, IOException e)
-            {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException
-            {
-                String bingPicture = response.body().string();
-                SharedPreferences.Editor editor =
-                        PreferenceManager.getDefaultSharedPreferences(
-                                AutoUpdateService.this).edit();
-                editor.putString("bing_pic",bingPicture);
-                editor.apply();
-            }
-        };
-
-        HttpUtil.sendOkHttpRequest(requestBingPic,callback);
     }
 
     @Override

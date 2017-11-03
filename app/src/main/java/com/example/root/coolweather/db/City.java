@@ -10,7 +10,7 @@ public class City extends DataSupport
 {
     //在数据库里的变量名都是小写的!
     //CREATE TABLE city (id integer primary key autoincrement,
-    // citycode integer, cityname text, provinceid integer);
+    //citycode integer, cityname text, provinceid integer);
 
     private int id;
     private String cityName;

@@ -10,7 +10,6 @@ public class Province extends DataSupport
 {
     //CREATE TABLE province (id integer primary key autoincrement,
     // provincecode integer, provincename text);
-
     private int    id;
     private String provinceName;
     private int    provinceCode;
@@ -32,7 +31,6 @@ public class Province extends DataSupport
     {
         return provinceName;
     }
-
 
     public void setProvinceCode(int provinceCode)
     {

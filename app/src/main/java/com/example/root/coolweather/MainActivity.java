@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //默认打开上次查询过的天气界面
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getString("weather",null) != null)
         {
@@ -23,6 +23,5 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-
     }
 }

@@ -12,7 +12,7 @@ public class County extends DataSupport
     [{"id":937,"name":"苏州","weather_id":"CN101190401"}]
     */
     //CREATE TABLE county (id integer primary key autoincrement,
-    // cityid integer, countyname text, weatherid text);
+    //cityid integer, countyname text, weatherid text);
 
     private int id;
     private String countyName;

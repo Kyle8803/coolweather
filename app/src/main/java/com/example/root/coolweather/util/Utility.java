@@ -19,6 +19,7 @@ import org.json.JSONObject;
 public class Utility
 {
     //解析和处理服务器返回的省级数据
+    //解析成功返回true,解析失败返回false
     public static boolean handleProvinceResponse(String response)
     {
         //判断response是不是为空
@@ -37,12 +38,10 @@ public class Utility
                     //完成数据添加操作
                     province.save();
                     /*
-                    id	  1
+                    id	      1
                     name	"北京"
-
                     id	      2
                     name	"上海"
-
                     id	      3
                     name	"天津"
                     */
@@ -73,9 +72,10 @@ public class Utility
                      */
                     JSONObject cityObject = allCities.getJSONObject(i);
                     City city = new City();
+                    //CREATE TABLE city (id integer primary key autoincrement,
+                    //citycode integer, cityname text, provinceid integer);
                     city.setCityCode(cityObject.getInt("id"));
                     city.setCityName(cityObject.getString("name"));
-
                     city.setProvinceId(provinceId);
                     city.save();
                 }
@@ -132,17 +132,17 @@ public class Utility
     {
         /*public class Weather
         {
-    *   {
-    *   "HeWeather":
-    *   [
     *       {
-    *           "status":"ok",
-    *           "basic",{},
+    *           "HeWeather":
+    *           [
+    *               {
+    *                   "status":"ok",
+    *                   "basic",{},
+    *               }
+    *           ]
     *       }
-    *   ]
-    * }
+    *   }
     * */
-
         try
         {
             JSONObject jsonObject = new JSONObject(response);
