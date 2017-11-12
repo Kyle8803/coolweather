@@ -264,8 +264,11 @@ public class ChooseAreaFragment extends Fragment
         //citycode integer, cityname text, provinceid integer);
         //where()方法用于指定查询的约束条件，对应了SQL当中的where关键字
         //Select * from city where provinceId = ?
+
         String province_id = String.valueOf(selectedProvince.getId());
-        cityList = DataSupport.where("provinceId = ?", province_id).find(City.class);
+        cityList = DataSupport
+                .where("provinceId = ?", province_id)
+                .find(City.class);
         if (cityList.size()>0)
         {
             dataList.clear();
@@ -295,7 +298,9 @@ public class ChooseAreaFragment extends Fragment
         //cityid integer, countyname text, weatherid text);
         //select * from county where cityid = ?
         String city_id = String.valueOf(selectedCity.getId());
-        countyList = DataSupport.where("cityid = ?", city_id).find(County.class);
+        countyList = DataSupport
+                .where("cityid = ?", city_id)
+                .find(County.class);
         if (countyList.size()>0)
         {
             dataList.clear();

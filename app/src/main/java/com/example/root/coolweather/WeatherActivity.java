@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -331,5 +332,44 @@ public class WeatherActivity extends AppCompatActivity
 
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);
+    }
+
+    /*
+    //按返回键时
+    public void onBackPressed()
+    {
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+    */
+    //退出时的时间
+    private long mExitTime;
+    //对返回键进行监听
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+        {
+
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void exit()
+    {
+        if ((System.currentTimeMillis() - mExitTime) > 2000)
+        {
+            Toast.makeText(WeatherActivity.this,
+                    "再按一次退出",
+                    Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        }
+        else
+        {
+            finish();
+            System.exit(0);
+        }
     }
 }
