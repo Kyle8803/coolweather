@@ -267,7 +267,7 @@ public class ChooseAreaFragment extends Fragment
 
         String province_id = String.valueOf(selectedProvince.getId());
         cityList = DataSupport
-                .where("provinceId = ?", province_id)
+                .where("provinceid = ?", province_id)
                 .find(City.class);
         if (cityList.size()>0)
         {
@@ -315,8 +315,8 @@ public class ChooseAreaFragment extends Fragment
         else
         {
             int provinceCode = selectedProvince.getProvinceCode();
-            int cityCode = selectedCity.getCityCode();
-            String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
+            int cityCode     = selectedCity.getCityCode();
+            String address   = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
             queryFromServer(address, "county");
         }
     }

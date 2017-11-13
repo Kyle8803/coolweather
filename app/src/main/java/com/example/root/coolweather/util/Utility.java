@@ -110,11 +110,11 @@ public class Utility
                       private int cityId;
                     * */
                     JSONObject countyObject = allCounties.getJSONObject(i);
-                    County county = new County();
+                    County     county       = new County();
 
+                    county.setCityId(cityId);
                     county.setCountyName(countyObject.getString("name"));
                     county.setWeatherId(countyObject.getString("weather_id"));
-                    county.setCityId(cityId);
                     county.save();
                 }
                 return true;
@@ -146,7 +146,7 @@ public class Utility
         try
         {
             JSONObject jsonObject = new JSONObject(response);
-            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            JSONArray jsonArray   = jsonObject.getJSONArray("HeWeather");
             String weatherContent = jsonArray.getJSONObject(0).toString();
             /*
             * {"name":"Tom","age":20}

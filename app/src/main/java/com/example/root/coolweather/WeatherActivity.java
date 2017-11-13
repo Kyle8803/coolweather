@@ -95,8 +95,7 @@ public class WeatherActivity extends AppCompatActivity
             //设置活动的布局会显示在状态栏上面
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                    View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             //将状态栏设置成透明色
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
@@ -294,7 +293,7 @@ public class WeatherActivity extends AppCompatActivity
         String weatherInfo = weather.now.temperature + "℃";
 
         titleCity.setText(cityName);
-        titleUpdateTime.setText(updateTime);
+        titleUpdateTime.setText("最近更新于" + updateTime);
 
         weatherInfoText.setText(weatherInfo);
         degreeText.setText(degree);
